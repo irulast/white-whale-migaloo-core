@@ -1,0 +1,52 @@
+{
+  "contracts": [
+    {
+      "wasm": "fee_collector.wasm",
+      "code_id": "59",
+      "version": "1.0.0",
+      "contract_address": "inj1cxnmukp9tjxksduey6wkgqmwzuvhvqqct4ryj0"
+    },
+    {
+      "wasm": "terraswap_factory.wasm",
+      "code_id": "60",
+      "version": "1.0.1",
+      "contract_address": "inj10wmp4czgnww9tvwg7xu239k88vx4ksyqslasq8"
+    },
+    {
+      "wasm": "terraswap_pair.wasm",
+      "code_id": "61",
+      "version": "1.0.0"
+    },
+    {
+      "wasm": "terraswap_router.wasm",
+      "code_id": "62",
+      "version": "1.0.0",
+      "contract_address": "inj1mju0w4qagjcgtrgepr796zmg083qurq932j36f"
+    },
+    {
+      "wasm": "terraswap_token.wasm",
+      "code_id": "63",
+      "version": "1.0.0"
+    },
+    {
+      "wasm": "vault_factory.wasm",
+      "code_id": "64",
+      "version": "1.0.5",
+      "contract_address": "inj18xv95z3qljhv55zrz75k8cm22f4x5ce6nxj9au"
+    },
+    {
+      "wasm": "vault.wasm",
+      "code_id": "65",
+      "version": "1.1.1"
+    },
+    {
+      "wasm": "vault_router.wasm",
+      "code_id": "66",
+      "version": "1.0.0",
+      "contract_address": "inj1ck3nftjd5hn3xmhkn7pj4rf6zvq4u0u934phf7"
+    }
+  ],
+  "date": "2022-09-20T13:22:00+0000",
+  "chain_id": "injective-888",
+  "deployer_address": "inj1k433snt7qdn8tztuhf2wh90uyze2ga3hwpfsug"
+}

@@ -1,0 +1,46 @@
+{
+  "contracts": [
+    {
+      "wasm": "fee_collector.wasm",
+      "code_id": "2868",
+      "version": "1.0.0",
+      "contract_address": "juno1lw626fqkdd9h42pm4chwrjmntftqhsh3ga4a5qmdp5lxdpwpudrqxggkdm"
+    },
+    {
+      "wasm": "terraswap_factory.wasm",
+      "code_id": "2869",
+      "version": "1.0.0",
+      "contract_address": "juno14jes0elpnsr6sd0ggmqpst2sjctec64v4yq9kwr75x94f68u2xtslgk662"
+    },
+    {
+      "wasm": "terraswap_pair.wasm",
+      "code_id": "2870",
+      "version": "1.0.0"
+    },
+    {
+      "wasm": "terraswap_router.wasm",
+      "code_id": "2871",
+      "version": "1.0.0",
+      "contract_address": "juno1tcn76ce9a8zxnu79znhk4tc03msfcjczav0sx2e8q7vlaecdtras5me0ra"
+    },
+    {
+      "wasm": "terraswap_token.wasm",
+      "code_id": "2872",
+      "version": "1.0.0"
+    },
+    {
+      "wasm": "vault_factory.wasm",
+      "code_id": "2873",
+      "version": "1.0.0",
+      "contract_address": "juno1wxr8aka4zutts83t0vqm4ezlg7jnrzsj054zk2vrxh794656g7wqtd07dz"
+    },
+    {
+      "wasm": "vault.wasm",
+      "code_id": "2874",
+      "version": "1.0.0"
+    }
+  ],
+  "date": "2022-08-22T11:14:12+0000",
+  "chain_id": "uni-3",
+  "deployer_address": "juno1ut7pkdz4hgy689v98vf3dj650frynyaj3p7r6t"
+}

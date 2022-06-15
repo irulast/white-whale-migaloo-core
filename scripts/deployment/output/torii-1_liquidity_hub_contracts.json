@@ -1,0 +1,46 @@
+{
+  "contracts": [
+    {
+      "wasm": "fee_collector.wasm",
+      "code_id": "52767",
+      "version": "0.8.0",
+      "contract_address": "archway126l343e0szylwmhjud6472xls4t7heam0a80nqyaxvlq0kdr4a8qx077lu"
+    },
+    {
+      "wasm": "terraswap_factory.wasm",
+      "code_id": "52768",
+      "version": "0.1.0",
+      "contract_address": "archway1nzs4ezz7fy4y20g6r7q3yh5mmkpq9r8drqd2frnwyaz0k7zn04pslplwmz"
+    },
+    {
+      "wasm": "terraswap_pair.wasm",
+      "code_id": "52769",
+      "version": "0.1.0"
+    },
+    {
+      "wasm": "terraswap_router.wasm",
+      "code_id": "52770",
+      "version": "0.1.0",
+      "contract_address": "archway1jzd5kuf63qyv8jmrn3yak7ujhaqq00zwcm9fs2pkfsnv9vheknts7393ak"
+    },
+    {
+      "wasm": "terraswap_token.wasm",
+      "code_id": "52771",
+      "version": "0.0.0"
+    },
+    {
+      "wasm": "vault_factory.wasm",
+      "code_id": "52772",
+      "version": "1.0.0",
+      "contract_address": "archway188d8n2fc4w697gllyrznzjxnhwranad7gy9fl7yk7mczyyz0uxeq995q9y"
+    },
+    {
+      "wasm": "vault.wasm",
+      "code_id": "52773",
+      "version": "1.0.0"
+    }
+  ],
+  "date": "2022-08-16T13:36:02+0000",
+  "chain_id": "torii-1",
+  "deployer_address": "archway1ut7pkdz4hgy689v98vf3dj650frynyajjcpuhq"
+}
