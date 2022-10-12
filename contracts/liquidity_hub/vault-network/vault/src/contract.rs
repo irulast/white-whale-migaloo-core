@@ -11,6 +11,7 @@ use vault_network::vault::{
     Config, ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg, INSTANTIATE_LP_TOKEN_REPLY_ID,
 };
 
+use crate::state::LOAN_COUNTER;
 use crate::{
     error::{StdResult, VaultError},
     execute::{callback, collect_protocol_fees, deposit, flash_loan, receive, update_config},
