@@ -88,7 +88,10 @@ pub enum QueryMsg {
     Config {},
     /// Retrieves the share of the assets stored in the vault that a given `amount` of lp tokens is entitled to in a [`Uint128`] response.
     Share { amount: Uint128 },
-    /// Retrieves the protocol fees that have been collected. If `all_time` is `true`, will return the all time collected fees.
+    /// Retrieves the protocol fees that have been accrued. If `all_time` is `true`, it will return
+    /// the fees collected since the inception of the pool. On the other hand, if `all_time` is set
+    /// to `false`, only the fees that has been accrued by the pool but not collected by the fee
+    /// collector will be returned.
     ProtocolFees { all_time: bool },
     /// Retrieves the [`Uint128`] amount that must be sent back to the contract to pay off a loan taken out, in a [`PaybackAmountResponse`] response.
     GetPaybackAmount { amount: Uint128 },

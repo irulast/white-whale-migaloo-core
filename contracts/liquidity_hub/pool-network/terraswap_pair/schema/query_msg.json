@@ -3,6 +3,7 @@
   "title": "QueryMsg",
   "oneOf": [
     {
+      "description": "Retrieves the [PairInfo] for the pair.",
       "type": "object",
       "required": [
         "pair"
@@ -15,6 +16,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Retrieves the configuration of the pool, returning a [ConfigResponse] response.",
       "type": "object",
       "required": [
         "config"
@@ -27,6 +29,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Retrieves the protocol fees that have been accrued. If `all_time` is `true`, it will return the fees collected since the inception of the pool. On the other hand, if `all_time` is set to `false`, only the fees that has been accrued by the pool but not collected by the fee collector will be returned.",
       "type": "object",
       "required": [
         "protocol_fees"
@@ -53,6 +56,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Retrieves the pool information, returning a [PoolResponse] response.",
       "type": "object",
       "required": [
         "pool"
@@ -65,6 +69,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Simulates a swap, returns a [SimulationResponse] response.",
       "type": "object",
       "required": [
         "simulation"
@@ -85,6 +90,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Simulates a reverse swap, i.e. given the ask asset, how much of the offer asset is needed to perform the swap. Returns a [ReverseSimulationResponse] response.",
       "type": "object",
       "required": [
         "reverse_simulation"

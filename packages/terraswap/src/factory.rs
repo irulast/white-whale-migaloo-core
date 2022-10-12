@@ -42,17 +42,21 @@ pub enum ExecuteMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
+    /// Retrieves the configuration of the contract in a [ConfigResponse] response.
     Config {},
-    Pair {
-        asset_infos: [AssetInfo; 2],
-    },
+    /// Retrieves the [PairInfo] for the given asset infos.
+    Pair { asset_infos: [AssetInfo; 2] },
+    /// Retrieves the Pairs created by the factory in a [PairsResponse] response. It returns ten
+    /// results by default, though it has pagination parameters if needed. `start_after` contains the
+    /// [AssetInfo] of the last item returned, while `limit` is the amount of items to retrieve, being
+    /// 30 the max number.
     Pairs {
         start_after: Option<[AssetInfo; 2]>,
         limit: Option<u32>,
     },
-    NativeTokenDecimals {
-        denom: String,
-    },
+    /// Retrieves the number of decimals for the given `denom`. The query fails if the denom is not found,
+    /// i.e. if [AddNativeTokenDecimals] was not executed for the given denom.
+    NativeTokenDecimals { denom: String },
 }
 
 // We define a custom struct for each query response

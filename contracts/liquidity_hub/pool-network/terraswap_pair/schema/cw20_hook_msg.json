@@ -3,7 +3,7 @@
   "title": "Cw20HookMsg",
   "oneOf": [
     {
-      "description": "Sell a given amount of asset",
+      "description": "Swaps a given amount of asset",
       "type": "object",
       "required": [
         "swap"
@@ -44,6 +44,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Withdraws liquidity",
       "type": "object",
       "required": [
         "withdraw_liquidity"

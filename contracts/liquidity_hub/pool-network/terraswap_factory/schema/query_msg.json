@@ -3,6 +3,7 @@
   "title": "QueryMsg",
   "oneOf": [
     {
+      "description": "Retrieves the configuration of the contract in a [ConfigResponse] response.",
       "type": "object",
       "required": [
         "config"
@@ -15,6 +16,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Retrieves the [PairInfo] for the given asset infos.",
       "type": "object",
       "required": [
         "pair"
@@ -40,6 +42,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Retrieves the Pairs created by the factory in a [PairsResponse] response. It returns ten results by default, though it has pagination parameters if needed. `start_after` contains the [AssetInfo] of the last item returned, while `limit` is the amount of items to retrieve, being 30 the max number.",
       "type": "object",
       "required": [
         "pairs"
@@ -73,6 +76,7 @@
       "additionalProperties": false
     },
     {
+      "description": "Retrieves the number of decimals for the given `denom`. The query fails if the denom is not found, i.e. if [AddNativeTokenDecimals] was not executed for the given denom.",
       "type": "object",
       "required": [
         "native_token_decimals"

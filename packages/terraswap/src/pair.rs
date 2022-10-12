@@ -21,8 +21,9 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
+    /// Used to trigger the [Cw20HookMsg] messages
     Receive(Cw20ReceiveMsg),
-    /// ProvideLiquidity a user provides pool liquidity
+    /// Provides liquidity to the pool
     ProvideLiquidity {
         assets: [Asset; 2],
         slippage_tolerance: Option<Decimal>,
@@ -42,38 +43,45 @@ pub enum ExecuteMsg {
         pool_fees: Option<PoolFee>,
         feature_toggle: Option<FeatureToggle>,
     },
-    /// Collects the Protocol fees
+    /// Collects the Protocol fees accrued by the pool
     CollectProtocolFees {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Cw20HookMsg {
-    /// Sell a given amount of asset
+    /// Swaps a given amount of asset
     Swap {
         belief_price: Option<Decimal>,
         max_spread: Option<Decimal>,
         to: Option<String>,
     },
+    /// Withdraws liquidity
     WithdrawLiquidity {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
+    /// Retrieves the [PairInfo] for the pair.
     Pair {},
+    /// Retrieves the configuration of the pool, returning a [ConfigResponse] response.
     Config {},
+    /// Retrieves the protocol fees that have been accrued. If `all_time` is `true`, it will return
+    /// the fees collected since the inception of the pool. On the other hand, if `all_time` is set
+    /// to `false`, only the fees that has been accrued by the pool but not collected by the fee
+    /// collector will be returned.
     ProtocolFees {
         asset_id: Option<String>,
         all_time: Option<bool>,
     },
+    /// Retrieves the pool information, returning a [PoolResponse] response.
     Pool {},
-    Simulation {
-        offer_asset: Asset,
-    },
-    ReverseSimulation {
-        ask_asset: Asset,
-    },
+    /// Simulates a swap, returns a [SimulationResponse] response.
+    Simulation { offer_asset: Asset },
+    /// Simulates a reverse swap, i.e. given the ask asset, how much of the offer asset is needed to
+    /// perform the swap. Returns a [ReverseSimulationResponse] response.
+    ReverseSimulation { ask_asset: Asset },
 }
 
 // Pool feature toggle

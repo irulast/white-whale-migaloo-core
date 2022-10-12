@@ -3,6 +3,7 @@
   "title": "ExecuteMsg",
   "oneOf": [
     {
+      "description": "Used to trigger the [Cw20HookMsg] messages",
       "type": "object",
       "required": [
         "receive"
@@ -15,7 +16,7 @@
       "additionalProperties": false
     },
     {
-      "description": "ProvideLiquidity a user provides pool liquidity",
+      "description": "Provides liquidity to the pool",
       "type": "object",
       "required": [
         "provide_liquidity"
@@ -151,7 +152,7 @@
       "additionalProperties": false
     },
     {
-      "description": "Collects the Protocol fees",
+      "description": "Collects the Protocol fees accrued by the pool",
       "type": "object",
       "required": [
         "collect_protocol_fees"
