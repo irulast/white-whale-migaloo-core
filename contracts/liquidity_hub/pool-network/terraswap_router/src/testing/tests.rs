@@ -9,7 +9,7 @@ use terraswap::mock_querier::mock_dependencies;
 
 use crate::error::ContractError;
 use cw20::{Cw20ExecuteMsg, Cw20ReceiveMsg};
-use terraswap::asset::{Asset, AssetInfo, PairInfo};
+use terraswap::asset::{Asset, AssetInfo, PairInfo, PairType};
 use terraswap::pair::ExecuteMsg as PairExecuteMsg;
 use terraswap::router::{
     ConfigResponse, Cw20HookMsg, ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg,
@@ -288,6 +288,7 @@ fn execute_swap_operation() {
                 contract_addr: "pair0000".to_string(),
                 liquidity_token: "liquidity0000".to_string(),
                 asset_decimals: [6u8, 6u8],
+                pair_type: PairType::ConstantProduct,
             },
         )],
         &[("uusd".to_string(), 6u8)],
@@ -388,6 +389,7 @@ fn execute_swap_operation() {
                 contract_addr: "pair0000".to_string(),
                 liquidity_token: "liquidity0000".to_string(),
                 asset_decimals: [6u8, 6u8],
+                pair_type: PairType::ConstantProduct,
             },
         )],
         &[("uusd".to_string(), 6u8)],
@@ -482,6 +484,7 @@ fn query_buy_with_routes() {
                     contract_addr: "pair0000".to_string(),
                     liquidity_token: "liquidity0000".to_string(),
                     asset_decimals: [6u8, 6u8],
+                    pair_type: PairType::ConstantProduct,
                 },
             ),
             (
@@ -498,6 +501,7 @@ fn query_buy_with_routes() {
                     contract_addr: "pair0001".to_string(),
                     liquidity_token: "liquidity0001".to_string(),
                     asset_decimals: [6u8, 6u8],
+                    pair_type: PairType::ConstantProduct,
                 },
             ),
         ],
@@ -571,6 +575,7 @@ fn query_reverse_routes_with_from_native() {
                         },
                     ],
                     asset_decimals: [8u8, 6u8],
+                    pair_type: PairType::ConstantProduct,
                 },
             ),
             (
@@ -587,6 +592,7 @@ fn query_reverse_routes_with_from_native() {
                         },
                     ],
                     asset_decimals: [8u8, 6u8],
+                    pair_type: PairType::ConstantProduct,
                 },
             ),
         ],
@@ -701,6 +707,7 @@ fn query_reverse_routes_with_to_native() {
                         },
                     ],
                     asset_decimals: [8u8, 6u8],
+                    pair_type: PairType::ConstantProduct,
                 },
             ),
             (
@@ -717,6 +724,7 @@ fn query_reverse_routes_with_to_native() {
                         },
                     ],
                     asset_decimals: [8u8, 6u8],
+                    pair_type: PairType::ConstantProduct,
                 },
             ),
         ],

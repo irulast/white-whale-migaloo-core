@@ -346,6 +346,7 @@ pub struct PairInfo {
     pub contract_addr: String,
     pub liquidity_token: String,
     pub asset_decimals: [u8; 2],
+    pub pair_type: PairType,
 }
 
 #[cw_serde]
@@ -354,6 +355,7 @@ pub struct PairInfoRaw {
     pub contract_addr: CanonicalAddr,
     pub liquidity_token: CanonicalAddr,
     pub asset_decimals: [u8; 2],
+    pub pair_type: PairType,
 }
 
 impl PairInfoRaw {
@@ -366,6 +368,7 @@ impl PairInfoRaw {
                 self.asset_infos[1].to_normal(api)?,
             ],
             asset_decimals: self.asset_decimals,
+            pair_type: self.pair_type.to_owned(),
         })
     }
 
@@ -387,5 +390,24 @@ impl PairInfoRaw {
                 info: info_1,
             },
         ])
+    }
+}
+
+#[cw_serde]
+pub enum PairType {
+    StableSwap {
+        /// The amount of amplification to perform on the constant product part of the swap formula.
+        amp: u64,
+    },
+    ConstantProduct,
+}
+
+impl PairType {
+    /// Gets a string representation of the pair type
+    pub fn get_label(&self) -> &str {
+        match self {
+            PairType::ConstantProduct => "ConstantProduct",
+            PairType::StableSwap { .. } => "StableSwap",
+        }
     }
 }

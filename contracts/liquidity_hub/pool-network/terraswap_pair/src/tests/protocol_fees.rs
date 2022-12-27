@@ -6,7 +6,7 @@ use cosmwasm_std::{
     SubMsgResult, Uint128, WasmMsg,
 };
 use cw20::{Cw20ExecuteMsg, Cw20ReceiveMsg};
-use terraswap::asset::{Asset, AssetInfo};
+use terraswap::asset::{Asset, AssetInfo, PairType};
 use terraswap::mock_querier::mock_dependencies;
 use terraswap::pair::{Cw20HookMsg, ExecuteMsg, InstantiateMsg, PoolFee};
 use white_whale::fee::Fee;
@@ -55,6 +55,7 @@ fn test_protocol_fees() {
             },
         },
         fee_collector_addr: "collector".to_string(),
+        pair_type: PairType::ConstantProduct,
     };
 
     let env = mock_env();
@@ -214,6 +215,7 @@ fn test_collect_protocol_fees_successful() {
             },
         },
         fee_collector_addr: "collector".to_string(),
+        pair_type: PairType::ConstantProduct,
     };
 
     let env = mock_env();
@@ -317,7 +319,7 @@ fn test_collect_protocol_fees_successful() {
             to_address: "collector".to_string(),
             amount: vec![Coin {
                 denom: "uusd".to_string(),
-                amount: protocol_fees_for_native.clone().first().unwrap().amount,
+                amount: protocol_fees_for_native.first().unwrap().amount,
             }],
         }))
     );
@@ -327,7 +329,7 @@ fn test_collect_protocol_fees_successful() {
             contract_addr: "asset0000".to_string(),
             msg: to_binary(&Cw20ExecuteMsg::Transfer {
                 recipient: "collector".to_string(),
-                amount: protocol_fees_for_token.clone().first().unwrap().amount,
+                amount: protocol_fees_for_token.first().unwrap().amount,
             })
             .unwrap(),
             funds: vec![],
@@ -411,6 +413,7 @@ fn test_collect_protocol_fees_successful_1_fee_only() {
             },
         },
         fee_collector_addr: "collector".to_string(),
+        pair_type: PairType::ConstantProduct,
     };
 
     let env = mock_env();

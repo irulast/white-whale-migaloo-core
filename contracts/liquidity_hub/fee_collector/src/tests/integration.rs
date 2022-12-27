@@ -4,7 +4,7 @@ use cosmwasm_std::{coins, to_binary, Addr, BankMsg, Coin, Decimal, Uint128, Uint
 use cw20::{BalanceResponse, Cw20Coin, Cw20ExecuteMsg, MinterResponse};
 use cw_multi_test::Executor;
 
-use terraswap::asset::{Asset, AssetInfo};
+use terraswap::asset::{Asset, AssetInfo, PairType};
 use terraswap::factory::ExecuteMsg::{AddNativeTokenDecimals, CreatePair};
 use terraswap::factory::PairsResponse;
 use terraswap::pair::{PoolFee, PoolResponse, ProtocolFeesResponse};
@@ -112,6 +112,7 @@ fn collect_all_factories_cw20_fees_successfully() {
                             share: Decimal::percent(7u64),
                         },
                     },
+                    pair_type: PairType::ConstantProduct,
                 },
                 &[],
             )
@@ -451,6 +452,7 @@ fn collect_cw20_fees_for_specific_contracts_successfully() {
                             share: Decimal::percent(7u64),
                         },
                     },
+                    pair_type: PairType::ConstantProduct,
                 },
                 &[],
             )
@@ -763,11 +765,11 @@ fn collect_cw20_fees_for_specific_contracts_successfully() {
     let fee_collector_fees_query: Vec<Asset> = app
         .wrap()
         .query_wasm_smart(
-            fee_collector_address.clone(),
+            fee_collector_address,
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Contracts {
                     contracts: vec![Contract {
-                        address: pair_tokens[1].clone().to_string(),
+                        address: pair_tokens[1].to_string(),
                         contract_type: ContractType::Pool {},
                     }],
                 },
@@ -891,6 +893,7 @@ fn collect_pools_native_fees_successfully() {
                             share: Decimal::percent(7u64),
                         },
                     },
+                    pair_type: PairType::ConstantProduct,
                 },
                 &[],
             )
@@ -957,7 +960,7 @@ fn collect_pools_native_fees_successfully() {
             fee_collector_address.clone(),
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Factory {
-                    factory_addr: pool_factory_address.clone().to_string(),
+                    factory_addr: pool_factory_address.to_string(),
                     factory_type: FactoryType::Pool {
                         start_after: None,
                         limit: None,
@@ -1083,7 +1086,7 @@ fn collect_pools_native_fees_successfully() {
             fee_collector_address.clone(),
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Factory {
-                    factory_addr: pool_factory_address.clone().to_string(),
+                    factory_addr: pool_factory_address.to_string(),
                     factory_type: FactoryType::Pool {
                         start_after: None,
                         limit: None,
@@ -1153,10 +1156,10 @@ fn collect_pools_native_fees_successfully() {
     let fee_collector_fees_query: Vec<Asset> = app
         .wrap()
         .query_wasm_smart(
-            fee_collector_address.clone(),
+            fee_collector_address,
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Factory {
-                    factory_addr: pool_factory_address.clone().to_string(),
+                    factory_addr: pool_factory_address.to_string(),
                     factory_type: FactoryType::Pool {
                         start_after: None,
                         limit: None,
@@ -1283,6 +1286,7 @@ fn collect_fees_with_pagination_successfully() {
                             share: Decimal::percent(7u64),
                         },
                     },
+                    pair_type: PairType::ConstantProduct,
                 },
                 &[],
             )
@@ -1656,7 +1660,7 @@ fn collect_fees_for_vault() {
             fee_collector_address.clone(),
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Factory {
-                    factory_addr: vault_factory_address.clone().to_string(),
+                    factory_addr: vault_factory_address.to_string(),
                     factory_type: FactoryType::Vault {
                         start_after: None,
                         limit: None,
@@ -1766,7 +1770,7 @@ fn collect_fees_for_vault() {
             fee_collector_address.clone(),
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Factory {
-                    factory_addr: vault_factory_address.clone().to_string(),
+                    factory_addr: vault_factory_address.to_string(),
                     factory_type: FactoryType::Vault {
                         start_after: None,
                         limit: None,
@@ -1787,7 +1791,7 @@ fn collect_fees_for_vault() {
     let fee_collector_fees_query: Vec<Asset> = app
         .wrap()
         .query_wasm_smart(
-            fee_collector_address.clone(),
+            fee_collector_address,
             &QueryMsg::Fees {
                 query_fees_for: QueryFeesFor::Contracts {
                     contracts: vec![Contract {
