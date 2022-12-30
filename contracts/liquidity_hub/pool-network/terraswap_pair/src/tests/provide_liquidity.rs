@@ -44,6 +44,9 @@ fn provide_liquidity() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -510,6 +513,9 @@ fn provide_liquidity_zero_amount() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -605,6 +611,9 @@ fn provide_liquidity_invalid_minimum_lp_amount() {
             },
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
+            },
+            burn_fee: Fee {
+                share: Decimal::zero(),
             },
         },
         fee_collector_addr: "collector".to_string(),

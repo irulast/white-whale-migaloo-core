@@ -111,6 +111,9 @@ fn collect_all_factories_cw20_fees_successfully() {
                         swap_fee: Fee {
                             share: Decimal::percent(7u64),
                         },
+                        burn_fee: Fee {
+                            share: Decimal::zero(),
+                        },
                     },
                     pair_type: PairType::ConstantProduct,
                 },
@@ -450,6 +453,9 @@ fn collect_cw20_fees_for_specific_contracts_successfully() {
                         },
                         swap_fee: Fee {
                             share: Decimal::percent(7u64),
+                        },
+                        burn_fee: Fee {
+                            share: Decimal::zero(),
                         },
                     },
                     pair_type: PairType::ConstantProduct,
@@ -892,6 +898,9 @@ fn collect_pools_native_fees_successfully() {
                         swap_fee: Fee {
                             share: Decimal::percent(7u64),
                         },
+                        burn_fee: Fee {
+                            share: Decimal::zero(),
+                        },
                     },
                     pair_type: PairType::ConstantProduct,
                 },
@@ -1285,6 +1294,9 @@ fn collect_fees_with_pagination_successfully() {
                         swap_fee: Fee {
                             share: Decimal::percent(7u64),
                         },
+                        burn_fee: Fee {
+                            share: Decimal::zero(),
+                        },
                     },
                     pair_type: PairType::ConstantProduct,
                 },
@@ -1607,6 +1619,9 @@ fn collect_fees_for_vault() {
                             share: Decimal::from_ratio(100u128, 3000u128),
                         },
                         protocol_fee: flash_loan_fee.clone(),
+                        burn_fee: Fee {
+                            share: Decimal::zero(),
+                        },
                     },
                 },
                 &[],

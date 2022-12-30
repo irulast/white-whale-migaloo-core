@@ -44,6 +44,9 @@ fn proper_initialization() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -139,6 +142,9 @@ fn test_initialization_invalid_fees() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -180,6 +186,9 @@ fn can_migrate_contract() {
             },
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
+            },
+            burn_fee: Fee {
+                share: Decimal::zero(),
             },
         },
         fee_collector_addr: "collector".to_string(),
@@ -402,6 +411,9 @@ fn test_update_config_unsuccessful() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -422,6 +434,9 @@ fn test_update_config_unsuccessful() {
             },
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
+            },
+            burn_fee: Fee {
+                share: Decimal::zero(),
             },
         }),
         feature_toggle: None,
@@ -481,6 +496,9 @@ fn test_update_config_successful() {
             swap_fee: Fee {
                 share: Decimal::zero(),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -508,6 +526,9 @@ fn test_update_config_successful() {
             },
             swap_fee: Fee {
                 share: Decimal::percent(3u64),
+            },
+            burn_fee: Fee {
+                share: Decimal::zero(),
             },
         }),
         feature_toggle: None,

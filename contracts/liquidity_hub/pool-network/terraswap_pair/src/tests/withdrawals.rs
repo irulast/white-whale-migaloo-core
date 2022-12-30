@@ -1,6 +1,6 @@
 use crate::contract::{execute, instantiate, reply};
 use crate::error::ContractError;
-use crate::state::{get_protocol_fees_for_asset, store_protocol_fee, COLLECTED_PROTOCOL_FEES};
+use crate::state::{get_fees_for_asset, store_fee, COLLECTED_PROTOCOL_FEES};
 use cosmwasm_std::testing::{mock_env, mock_info, MOCK_CONTRACT_ADDR};
 use cosmwasm_std::{
     attr, to_binary, BankMsg, Coin, CosmosMsg, Decimal, Reply, Response, SubMsg, SubMsgResponse,
@@ -48,6 +48,9 @@ fn withdraw_xyk_liquidity() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -75,14 +78,14 @@ fn withdraw_xyk_liquidity() {
     let _res = reply(deps.as_mut(), mock_env(), reply_msg).unwrap();
 
     // store some protocol fees in both native and token
-    store_protocol_fee(
+    store_fee(
         deps.as_mut().storage,
         Uint128::from(10u8),
         "uusd".to_string(),
         COLLECTED_PROTOCOL_FEES,
     )
     .unwrap();
-    store_protocol_fee(
+    store_fee(
         deps.as_mut().storage,
         Uint128::from(20u8),
         "asset0000".to_string(),
@@ -106,14 +109,22 @@ fn withdraw_xyk_liquidity() {
     let msg_refund_1 = res.messages.get(1).expect("no message");
     let msg_burn_liquidity = res.messages.get(2).expect("no message");
 
-    let protocol_fee_native =
-        get_protocol_fees_for_asset(deps.as_mut().storage, "uusd".to_string()).unwrap();
+    let protocol_fee_native = get_fees_for_asset(
+        deps.as_mut().storage,
+        "uusd".to_string(),
+        COLLECTED_PROTOCOL_FEES,
+    )
+    .unwrap();
     let expected_native_refund_amount: Uint128 = Uint128::from(100u128)
         .checked_sub(protocol_fee_native.amount)
         .unwrap();
 
-    let protocol_fee_token =
-        get_protocol_fees_for_asset(deps.as_mut().storage, "asset0000".to_string()).unwrap();
+    let protocol_fee_token = get_fees_for_asset(
+        deps.as_mut().storage,
+        "asset0000".to_string(),
+        COLLECTED_PROTOCOL_FEES,
+    )
+    .unwrap();
     let expected_token_refund_amount: Uint128 = Uint128::from(100u128)
         .checked_sub(protocol_fee_token.amount)
         .unwrap();
@@ -198,6 +209,9 @@ fn withdraw_stableswap_liquidity() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::StableSwap { amp: 100 },
@@ -223,14 +237,14 @@ fn withdraw_stableswap_liquidity() {
     reply(deps.as_mut(), mock_env(), reply_msg).unwrap();
 
     // store some protocol fees in both native and token
-    store_protocol_fee(
+    store_fee(
         deps.as_mut().storage,
         Uint128::from(10u8),
         "uusd".to_string(),
         COLLECTED_PROTOCOL_FEES,
     )
     .unwrap();
-    store_protocol_fee(
+    store_fee(
         deps.as_mut().storage,
         Uint128::from(20u8),
         "asset0000".to_string(),
@@ -249,14 +263,22 @@ fn withdraw_stableswap_liquidity() {
     let info = mock_info("liquidity0000", &[]);
     let res = execute(deps.as_mut(), env, info, msg).unwrap();
 
-    let protocol_fee_native =
-        get_protocol_fees_for_asset(deps.as_mut().storage, "uusd".to_string()).unwrap();
+    let protocol_fee_native = get_fees_for_asset(
+        deps.as_mut().storage,
+        "uusd".to_string(),
+        COLLECTED_PROTOCOL_FEES,
+    )
+    .unwrap();
     let expected_native_refund_amount: Uint128 = Uint128::from(100u128)
         .checked_sub(protocol_fee_native.amount)
         .unwrap();
 
-    let protocol_fee_token =
-        get_protocol_fees_for_asset(deps.as_mut().storage, "asset0000".to_string()).unwrap();
+    let protocol_fee_token = get_fees_for_asset(
+        deps.as_mut().storage,
+        "asset0000".to_string(),
+        COLLECTED_PROTOCOL_FEES,
+    )
+    .unwrap();
     let expected_token_refund_amount: Uint128 = Uint128::from(100u128)
         .checked_sub(protocol_fee_token.amount)
         .unwrap();
@@ -335,6 +357,9 @@ fn test_withdrawal_unauthorized() {
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
             },
+            burn_fee: Fee {
+                share: Decimal::zero(),
+            },
         },
         fee_collector_addr: "collector".to_string(),
         pair_type: PairType::ConstantProduct,
@@ -396,6 +421,9 @@ fn test_withdrawal_wrong_message() {
             },
             swap_fee: Fee {
                 share: Decimal::percent(1u64),
+            },
+            burn_fee: Fee {
+                share: Decimal::zero(),
             },
         },
         fee_collector_addr: "collector".to_string(),

@@ -40,6 +40,25 @@ function init_chain_env() {
 
   chihuahua)
     source <(cat "$project_root_path"/scripts/deployment/deploy_env/mainnets/chihuahua.env)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/base_chihuahua.env)
+    ;;
+
+  injective)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/mainnets/injective.env)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/base_injective.env)
+    ;;
+
+  injective-testnet)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/testnets/injective.env)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/base_injective.env)
+    ;;
+
+  comdex)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/mainnets/comdex.env)
+    ;;
+
+  comdex-testnet)
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/testnets/comdex.env)
     ;;
 
   *)
@@ -48,5 +67,7 @@ function init_chain_env() {
     ;;
   esac
 
-  source <(cat "$project_root_path"/scripts/deployment/deploy_env/base.env)
+  if [[ $chain != "chihuahua" && $chain != "injective" && $chain != "injective-testnet" ]]; then
+    source <(cat "$project_root_path"/scripts/deployment/deploy_env/base.env)
+  fi
 }

@@ -2,9 +2,10 @@ use std::cmp::Ordering;
 use std::ops::Mul;
 
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Decimal, Decimal256, StdError, StdResult, Uint128, Uint256};
+use cosmwasm_std::{Decimal, Decimal256, StdError, StdResult, Storage, Uint128, Uint256};
+use cw_storage_plus::Item;
 
-use terraswap::asset::{Asset, PairType};
+use terraswap::asset::{Asset, AssetInfo, PairType};
 use terraswap::pair::PoolFee;
 
 use crate::error::ContractError;
@@ -218,6 +219,9 @@ mod tests {
                 swap_fee: Fee {
                     share: Decimal::from_ratio(1u128, 400u128),
                 },
+                burn_fee: Fee {
+                    share: Decimal::zero(),
+                },
             },
             &PairType::StableSwap { amp: 100 },
             6,
@@ -231,7 +235,8 @@ mod tests {
                 protocol_fee_amount: Uint128::new(24),
                 swap_fee_amount: Uint128::new(24),
                 return_amount: Uint128::new(9_949),
-                spread_amount: Uint128::new(3)
+                spread_amount: Uint128::new(3),
+                burn_fee_amount: Uint128::zero()
             }
         );
     }
@@ -253,7 +258,7 @@ pub fn compute_swap(
     match swap_type {
         PairType::ConstantProduct => {
             // offer => ask
-            // ask_amount = (ask_pool * offer_amount / (offer_pool + offer_amount)) - swap_fee - protocol_fee
+            // ask_amount = (ask_pool * offer_amount / (offer_pool + offer_amount)) - swap_fee - protocol_fee - burn_fee
             let return_amount: Uint256 = Uint256::one()
                 * Decimal256::from_ratio(ask_pool.mul(offer_amount), offer_pool + offer_amount);
 
@@ -262,9 +267,11 @@ pub fn compute_swap(
             let spread_amount: Uint256 = (offer_amount * exchange_rate) - return_amount;
             let swap_fee_amount: Uint256 = pool_fees.swap_fee.compute(return_amount);
             let protocol_fee_amount: Uint256 = pool_fees.protocol_fee.compute(return_amount);
+            let burn_fee_amount: Uint256 = pool_fees.burn_fee.compute(return_amount);
 
-            // swap and protocol fee will be absorbed by the pool
-            let return_amount: Uint256 = return_amount - swap_fee_amount - protocol_fee_amount;
+            // swap and protocol fee will be absorbed by the pool. Burn fee amount will be burned on a subsequent msg.
+            let return_amount: Uint256 =
+                return_amount - swap_fee_amount - protocol_fee_amount - burn_fee_amount;
 
             Ok(SwapComputation {
                 return_amount: return_amount
@@ -277,6 +284,9 @@ pub fn compute_swap(
                     .try_into()
                     .map_err(|_| ContractError::SwapOverflowError {})?,
                 protocol_fee_amount: protocol_fee_amount
+                    .try_into()
+                    .map_err(|_| ContractError::SwapOverflowError {})?,
+                burn_fee_amount: burn_fee_amount
                     .try_into()
                     .map_err(|_| ContractError::SwapOverflowError {})?,
             })
@@ -308,9 +318,12 @@ pub fn compute_swap(
             // subtract fees from return_amount
             let swap_fee_amount: Uint256 = pool_fees.swap_fee.compute(return_amount);
             let protocol_fee_amount: Uint256 = pool_fees.protocol_fee.compute(return_amount);
+            let burn_fee_amount = pool_fees.burn_fee.compute(return_amount);
+
             let return_amount = return_amount
                 .checked_sub(swap_fee_amount)?
-                .checked_sub(protocol_fee_amount)?;
+                .checked_sub(protocol_fee_amount)?
+                .checked_sub(burn_fee_amount)?;
 
             Ok(SwapComputation {
                 return_amount: return_amount
@@ -325,6 +338,9 @@ pub fn compute_swap(
                 protocol_fee_amount: protocol_fee_amount
                     .try_into()
                     .map_err(|_| ContractError::SwapOverflowError {})?,
+                burn_fee_amount: burn_fee_amount
+                    .try_into()
+                    .map_err(|_| ContractError::SwapOverflowError {})?,
             })
         }
     }
@@ -337,6 +353,7 @@ pub struct SwapComputation {
     pub spread_amount: Uint128,
     pub swap_fee_amount: Uint128,
     pub protocol_fee_amount: Uint128,
+    pub burn_fee_amount: Uint128,
 }
 
 pub fn compute_offer_amount(
@@ -351,7 +368,9 @@ pub fn compute_offer_amount(
 
     // ask => offer
     // offer_amount = cp / (ask_pool - ask_amount / (1 - fees)) - offer_pool
-    let fees = pool_fees.swap_fee.to_decimal_256() + pool_fees.protocol_fee.to_decimal_256();
+    let fees = pool_fees.swap_fee.to_decimal_256()
+        + pool_fees.protocol_fee.to_decimal_256()
+        + pool_fees.burn_fee.to_decimal_256();
     let one_minus_commission = Decimal256::one() - fees;
     let inv_one_minus_commission = Decimal256::one() / one_minus_commission;
 
@@ -372,12 +391,14 @@ pub fn compute_offer_amount(
 
     let swap_fee_amount: Uint256 = pool_fees.swap_fee.compute(before_commission_deduction);
     let protocol_fee_amount: Uint256 = pool_fees.protocol_fee.compute(before_commission_deduction);
+    let burn_fee_amount: Uint256 = pool_fees.burn_fee.compute(before_commission_deduction);
 
     Ok(OfferAmountComputation {
         offer_amount: offer_amount.try_into()?,
         spread_amount: spread_amount.try_into()?,
         swap_fee_amount: swap_fee_amount.try_into()?,
         protocol_fee_amount: protocol_fee_amount.try_into()?,
+        burn_fee_amount: burn_fee_amount.try_into()?,
     })
 }
 
@@ -388,6 +409,7 @@ pub struct OfferAmountComputation {
     pub spread_amount: Uint128,
     pub swap_fee_amount: Uint128,
     pub protocol_fee_amount: Uint128,
+    pub burn_fee_amount: Uint128,
 }
 
 /// If `belief_price` and `max_spread` both are given,
@@ -503,4 +525,26 @@ pub fn get_protocol_fee_for_asset(
     } else {
         Uint128::zero()
     }
+}
+
+/// Instantiates fees for a given fee_storage_item
+pub fn instantiate_fees(
+    storage: &mut dyn Storage,
+    asset_info_0: AssetInfo,
+    asset_info_1: AssetInfo,
+    fee_storage_item: Item<Vec<Asset>>,
+) -> StdResult<()> {
+    fee_storage_item.save(
+        storage,
+        &vec![
+            Asset {
+                info: asset_info_0,
+                amount: Uint128::zero(),
+            },
+            Asset {
+                info: asset_info_1,
+                amount: Uint128::zero(),
+            },
+        ],
+    )
 }
